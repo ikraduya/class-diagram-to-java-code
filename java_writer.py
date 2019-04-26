@@ -12,21 +12,21 @@ CLASS_TEMPLATE = """class {0} {1}{{
 # - private
 # + public
 # # protected
-VARIABLE_TEMPLATE = '\t{0} {1}{2} {3};'
+VARIABLE_TEMPLATE = '\t{0}{1}{2} {3};'
 def fitMemberVar(member):
   access_spec = ''
   if member.access_spec == '-':
-    access_spec = 'private'
+    access_spec = 'private '
   elif member.access_spec == '+':
-    access_spec = 'public'
+    access_spec = 'public '
   elif member.access_spec == '#':
-    access_spec = 'protected'
+    access_spec = 'protected '
 
   static = ''
   if ('fontStyle' in member.xml.styleSet) and member.xml.styleSet['fontStyle'] == "4":
     static = 'static '
   
-  var_re = re.findall(r'([\w\d]+)\s*:\s*((?:[\w\d]|(?:&lt;|&gt;))+)', member.xml.attrSet['value'])[0]
+  var_re = re.findall(r'([\w\d]+)\s*:\s*((?:[\w\d,\s]|(?:&lt;|&gt;))+)', member.xml.attrSet['value'])[0]
   var_type = var_re[1].replace('&lt;', '<').replace('&gt;', '>')
   var_name = var_re[0]
   return VARIABLE_TEMPLATE.format(access_spec, static, var_type, var_name)
