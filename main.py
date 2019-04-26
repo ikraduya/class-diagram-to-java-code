@@ -8,7 +8,7 @@ class TipeXML(Enum):
   KELAS = 1
   PANAH_TURUNAN = 2
   METHOD = 3
-  MEMBER = 4
+  ATTRIBUTE = 4
 
 class XMLBlock:
   # attributes: 
@@ -16,7 +16,7 @@ class XMLBlock:
   # attrSet = dict
   # styleName = string
   # styleSet = dict
-  # type = TipeXML (KELAS, MEMBER, METHOD, PANAH_TURUNAN, UNKNOWN)
+  # type = TipeXML (KELAS, ATTRIBUTE, METHOD, PANAH_TURUNAN, UNKNOWN)
   # isSelfClosing = boolean
   # parentId = string
   # child = string (nullable)
@@ -65,7 +65,7 @@ class XMLBlock:
         if '(' in self.attrSet['value']:  # method
           self.type = TipeXML.METHOD
         else: # attribute member
-          self.type = TipeXML.MEMBER
+          self.type = TipeXML.ATTRIBUTE
       else:
         self.type = TipeXML.UNKNOWN
     else:
@@ -75,11 +75,11 @@ class XMLBlock:
     return string.replace(self.child, '')
 
   def findAttrsSet(self, string=''):
-    pattern = r'(([\w]+)="([\s\S]*?)")'
+    pattern = r'([\w]+)="([\s\S]*?)"'
     matches = re.findall(pattern, string)
     self.attrSet = {}
     for i in range(len(matches)):
-      self.attrSet[matches[i][1]] = matches[i][2]
+      self.attrSet[matches[i][0]] = matches[i][1]
 
   # public class
   def __str__(self):
@@ -120,7 +120,7 @@ class ClassGroup:
     for i in range(len(xmlList)):
       xml = xmlList[i]
       if (xml.parentId == self.id):
-        if xml.type == TipeXML.MEMBER:
+        if xml.type == TipeXML.ATTRIBUTE:
           self.members.append(Attr(xml, xml.attrSet['value'][:1]))
         elif xml.type == TipeXML.METHOD:
           self.methods.append(Attr(xml, xml.attrSet['value'][:1]))

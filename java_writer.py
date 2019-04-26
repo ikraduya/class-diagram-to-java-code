@@ -113,9 +113,11 @@ def getParentClass(a_class, class_group, isARelations):
 
 def writeToJavaCode(class_group, arrow_group):
   isARelations = getIsARelations(arrow_group)
+  
   if os.path.exists('output'):
     shutil.rmtree('output', ignore_errors=False, onerror=None)
   os.makedirs('output')
+
   for i in range(len(class_group)):
     parent = getParentClass(class_group[i], class_group, isARelations)
     writeAClass(class_group[i], parent)
